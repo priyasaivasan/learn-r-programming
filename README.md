@@ -23,6 +23,7 @@ This repository is a **complete, hands-on guide to R programming** built for uni
 | 1 | [Overview of R](docs/01_overview.md) | What R is, its history, and where it's used |
 | 2 | [Installing R & RStudio](docs/02_installation.md) | Step-by-step setup for Windows and Mac |
 | 3 | [R Environment & Workspace](docs/03_environment.md) | Understanding the RStudio IDE |
+| 3b | [RStudio Menus: File & Code](docs/03b_rstudio_menus.md) | File types, Code menu shortcuts explained |
 | 4 | [R Syntax & Data Types](docs/04_syntax_datatypes.md) | How R reads code and stores data |
 | 5 | [Variables, Vectors & Matrices](docs/05_variables_vectors_matrices.md) | Core data structures |
 | 6 | [Lists & Data Frames](docs/06_lists_dataframes.md) | Flexible and tabular data |
