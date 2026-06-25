@@ -47,7 +47,3 @@ This repository is a **complete, hands-on guide to R programming** built for uni
 - R installed → [cran.r-project.org](https://cran.r-project.org)
 - RStudio installed → [posit.co/download/rstudio-desktop](https://posit.co/download/rstudio-desktop)
 - No prior programming experience needed!
-
----
-
-*Made with ❤️ for students learning R from scratch.*
