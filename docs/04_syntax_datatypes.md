@@ -1,23 +1,12 @@
-# 🔤 04 — R Syntax and Data Types
+# 🔢 04 — R Syntax & Data Types
 
 > **Author:** RP &nbsp;|&nbsp; [@priyasaivasan](https://github.com/priyasaivasan)
 
 ---
 
-## 🧠 Before You Code — How R Reads Your Instructions
+## 📌 R Syntax Basics
 
-R reads your code **line by line**, from top to bottom. A few golden rules:
-
-- Lines starting with `#` are **comments** — R ignores them, they're notes for you
-- The `>` symbol in the Console means R is **ready and waiting** for input
-- The `+` symbol means R knows your code **isn't finished yet** (e.g. inside a bracket)
-- R is **case-sensitive** — `Name` and `name` are two different things
-
----
-
-## ➕ Basic Syntax — Arithmetic
-
-> **What's happening:** R works like a calculator. Type an expression, press Enter, get the answer.
+> **What's happening:** R reads your instructions line by line. Each line is either a calculation, an assignment, or a function call. The `#` symbol starts a comment — R ignores anything after it.
 
 ![R Syntax in RStudio Console](../screenshots/01_syntax.png)
 
@@ -56,15 +45,96 @@ logical  →  integer  →  double  →  character
 ```
 When R mixes types, it converts everything to the *most complex* type in the mix.
 
-### Useful Type Functions
+---
+
+## 🔍 Checking & Converting Types
+
+> **What's happening:** R gives you simple functions to ask "what type is this?" and to convert between types. You'll use these constantly when debugging.
+
+![Type Functions in RStudio Console](../screenshots/02b_typefunctions.png)
+
+### Finding the Type
+
 ```r
-class(x)        # what type is x?
-typeof(x)       # more detailed type info
-is.numeric(x)   # TRUE or FALSE
-as.character(x) # convert to character
-as.numeric(x)   # convert to number
-as.logical(x)   # convert to TRUE/FALSE
+x <- 42L
+class(x)        # "integer"   — the category of the object
+typeof(x)       # "integer"   — the internal storage type
+
+y <- 3.14
+class(y)        # "numeric"
+
+z <- "hello"
+class(z)        # "character"
+
+b <- TRUE
+class(b)        # "logical"
 ```
+
+### Checking if Something IS a Type
+
+```r
+is.numeric(3.14)      # TRUE
+is.character("hi")    # TRUE
+is.logical(FALSE)     # TRUE
+is.integer(42L)       # TRUE
+is.integer(42)        # FALSE  — plain 42 is numeric, not integer!
+```
+
+### Converting Between Types
+
+```r
+as.character(100)     # "100"   — number becomes text
+as.numeric("3.14")   # 3.14    — text becomes number
+as.logical(0)         # FALSE   — 0 is always FALSE
+as.logical(1)         # TRUE    — any non-zero is TRUE
+as.integer(3.99)      # 3       — decimal is cut off, not rounded
+```
+
+> 💡 **Rule of thumb:** Use `class()` when you're not sure what something is. It's your best debugging friend.
+
+---
+
+## 📅 Working with Dates & Time
+
+> **What's happening:** R has built-in functions to work with today's date, current time, and day information. These are handy for adding timestamps to reports or filtering data by date.
+
+![Date Functions in RStudio Console](../screenshots/02c_dates.png)
+
+```r
+# Today's date
+Sys.Date()
+# [1] "2026-06-28"
+
+# Current date AND time
+Sys.time()
+# [1] "2026-06-28 10:35:22 IST"
+
+# What day of the week is it?
+weekdays(Sys.Date())
+# [1] "Sunday"
+
+# What month?
+months(Sys.Date())
+# [1] "June"
+
+# Format a date your own way
+format(Sys.Date(), "%d %B %Y")
+# [1] "28 June 2026"
+
+# class of a date object
+class(Sys.Date())
+# [1] "Date"
+```
+
+### Format codes you'll use often
+
+| Code | Meaning | Example |
+|------|---------|---------|
+| `%d` | Day (number) | `28` |
+| `%m` | Month (number) | `06` |
+| `%B` | Month (full name) | `June` |
+| `%Y` | Year (4 digit) | `2026` |
+| `%A` | Weekday name | `Sunday` |
 
 ---
 
@@ -74,8 +144,35 @@ as.logical(x)   # convert to TRUE/FALSE
 
 > ⚠️ Text (character) values must always be wrapped in `"quotes"` — without them R thinks it's a variable name.
 
-> 💡 Use `class()` whenever you're unsure what type something is — it's your best diagnostic tool.
+> ⚠️ `42` is numeric but `42L` is integer. The `L` suffix is easy to forget.
+
+> 💡 Use `class()` whenever you're unsure what type something is.
 
 ---
 
-## ⬅️ [Back: Environment](03_environment.md) &nbsp;|&nbsp; [➡️ Next: Variables, Vectors & Matrices](05_variables_vectors_matrices.md)
+## ✏️ Try It Yourself
+
+**Exercise — Data Types & Dates**
+
+Try these in your RStudio console and note what you get:
+
+1. What does `class(TRUE)` return?
+2. What does `as.integer(7.9)` give you — is it `7` or `8`? Why?
+3. Run `weekdays(Sys.Date())` — what day is it today?
+4. What happens when you run `as.numeric("hello")`? What does the warning mean?
+5. What is `class(Sys.Date())`?
+
+<details>
+<summary>💡 Click to reveal answers</summary>
+
+1. `"logical"` — TRUE and FALSE are logical type
+2. `7` — `as.integer()` truncates (chops off) the decimal, it does NOT round
+3. Whatever today's day is — this is a live function!
+4. You get `NA` with a warning — R cannot convert the word "hello" into a number, so it returns a missing value
+5. `"Date"` — R stores dates in its own special Date class
+
+</details>
+
+---
+
+## ⬅️ [Back: Environment](03_environment.md) &nbsp;|&nbsp; [➡️ Next: Variables](05_variables.md)
