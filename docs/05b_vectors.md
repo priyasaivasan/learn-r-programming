@@ -1,257 +1,419 @@
-# 📊 05b — Vectors
+# 📊 Vectors
 
 > **Author:** RP &nbsp;|&nbsp; [@priyasaivasan](https://github.com/priyasaivasan)
 
 ---
 
-## 📌 What is a Vector?
+# Part 1 — Understanding the Concept
 
-> **In plain English:** A vector is a row of values of the same type, stored in order. Think of it like a single column in a spreadsheet — all entries must be the same kind (all numbers, all names, or all true/false).
+## What is a Vector?
 
-If a variable is one box holding one value, a vector is a shelf of boxes — all the same type, lined up in order.
+A **vector** is the most fundamental data structure in R. Almost everything in R is built on top of vectors — once you understand them well, the rest of R starts to make a lot of sense.
+
+In simple terms: a vector is **an ordered collection of values, all of the same type**.
+
+Think of it like a single column in a spreadsheet:
 
 ```
 scores:  [ 85 | 90 | 78 | 92 | 88 ]
-          1    2    3    4    5       ← position numbers (called index)
+           1    2    3    4    5     ← position (called index)
 ```
 
-You create a vector using `c()` — the `c` stands for **combine**.
+Each value has a fixed position (called an **index**), starting from **1**. This is different from languages like Python, where counting starts at 0 — in R, the first element is always at position 1.
 
----
-
-## 🖥️ Creating Vectors — Examples in RStudio
-
-![Creating Vectors in RStudio Console](../screenshots/vec_01_create.png)
+You create a vector using the `c()` function — `c` stands for **combine**:
 
 ```r
-# A numeric vector — exam scores
 scores <- c(85, 90, 78, 92, 88)
-scores
-# [1] 85 90 78 92 88
-
-# A character vector — student names
-students <- c("Alice", "Bob", "Clara", "David", "Eva")
-students
-# [1] "Alice" "Bob"   "Clara" "David" "Eva"
-
-# A logical vector
-passed <- c(TRUE, TRUE, FALSE, TRUE, TRUE)
-passed
-# [1]  TRUE  TRUE FALSE  TRUE  TRUE
-
-# Check the type
-class(scores)
-# [1] "numeric"
-
-class(students)
-# [1] "character"
-
-# How many elements?
-length(scores)
-# [1] 5
 ```
-
-> ⚠️ **Vectors must be one type.** If you mix types, R quietly converts everything to the most flexible type. For example, `c(1, 2, "three")` becomes all character — `"1" "2" "three"`. This is called **coercion**.
 
 ---
 
-## 🔢 Sequences & Repetitions
+## The "Same Type" Rule
 
-> You don't always have to type every value. R has shortcuts for creating sequences.
+A vector can only hold one type of data — all numbers, all text, or all TRUE/FALSE. You cannot mix types in a single vector.
 
-![Sequences in RStudio Console](../screenshots/vec_02_sequences.png)
+What happens if you try? R doesn't give you an error — it quietly converts everything to the most flexible type available. This is called **type coercion**, and it follows the same hierarchy you saw in data types:
+
+```
+logical  →  integer  →  numeric  →  character
+```
+
+**Example:**
+```r
+c(1, 2, "three")
+# [1] "1"     "2"     "three"
+```
+
+R converted `1` and `2` into `"1"` and `"2"` because character is the most flexible type. This is silent — R won't warn you. Always use `class()` to check what type your vector actually is.
+
+---
+
+## Creating Vectors
+
+### Using `c()`
+
+The most common way — just list your values separated by commas:
 
 ```r
-# Sequence from 1 to 10
+# Numeric vector
+scores <- c(85, 90, 78, 92, 88)
+
+# Character vector
+students <- c("Alice", "Bob", "Clara", "David", "Eva")
+
+# Logical vector
+passed <- c(TRUE, TRUE, FALSE, TRUE, TRUE)
+```
+
+### Using `:` for Integer Sequences
+
+The colon `:` creates a sequence of consecutive integers in one step:
+
+```r
 1:10
 # [1]  1  2  3  4  5  6  7  8  9 10
 
-# Sequence with a step
-seq(1, 20, by = 5)
+10:1        # counting down
+# [1] 10  9  8  7  6  5  4  3  2  1
+```
+
+### Using `seq()` for Custom Sequences
+
+`seq()` gives you much more control — you can specify the step size or the number of values you want:
+
+```r
+seq(1, 20, by = 5)           # step of 5
 # [1]  1  6 11 16
 
-# Exactly n values between two numbers
-seq(0, 1, length.out = 5)
+seq(0, 1, length.out = 5)    # exactly 5 values between 0 and 1
 # [1] 0.00 0.25 0.50 0.75 1.00
+```
 
-# Repeat a value
+### Using `rep()` for Repetitions
+
+`rep()` repeats values in different patterns:
+
+```r
 rep(0, times = 4)
 # [1] 0 0 0 0
 
-# Repeat a vector
-rep(c(1, 2, 3), times = 2)
+rep(c(1, 2, 3), times = 2)     # repeat the whole vector twice
 # [1] 1 2 3 1 2 3
 
-rep(c(1, 2, 3), each = 2)
+rep(c(1, 2, 3), each = 2)      # repeat each element twice
 # [1] 1 1 2 2 3 3
 ```
 
 ---
 
-## 🎯 Accessing Elements (Indexing)
+## Accessing Elements — Indexing
 
-> **What's happening:** Every element in a vector has a position number starting from 1. You use square brackets `[ ]` to pull out specific elements.
-
-> 💡 **Important:** R starts counting from **1**, not 0 like Python or Java.
-
-![Vector Indexing in RStudio Console](../screenshots/vec_03_index.png)
+To get a specific element out of a vector, you use **square brackets** `[ ]` with the position number:
 
 ```r
 scores <- c(85, 90, 78, 92, 88)
 
-# Get the 1st element
-scores[1]
-# [1] 85
+scores[1]      # first element  → 85
+scores[3]      # third element  → 78
+scores[5]      # last element   → 88
+```
 
-# Get the 3rd element
-scores[3]
-# [1] 78
+You can also:
 
-# Get elements 2 through 4
-scores[2:4]
-# [1] 90 78 92
+**Get a range of elements:**
+```r
+scores[2:4]       # elements 2 through 4 → 90 78 92
+```
 
-# Get specific elements (1st and 5th)
-scores[c(1, 5)]
-# [1] 85 88
+**Get specific elements by listing their positions:**
+```r
+scores[c(1, 5)]   # first and fifth → 85 88
+```
 
-# Exclude an element (drop the 3rd)
-scores[-3]
-# [1] 85 90 92 88
+**Exclude an element using negative indexing:**
+```r
+scores[-3]        # everything except the 3rd → 85 90 92 88
+```
 
-# Change the 2nd value
-scores[2] <- 95
+**Update an element:**
+```r
+scores[2] <- 95   # change the 2nd element to 95
 scores
 # [1] 85 95 78 92 88
 ```
 
 ---
 
-## 🔎 Filtering with Conditions
+## Filtering — Getting Elements That Match a Condition
 
-> **What's happening:** You can ask R "give me all elements where a condition is true." This is one of the most powerful things vectors can do.
+One of R's most powerful features is the ability to extract elements from a vector based on a condition, in a single line of code.
 
-![Vector Filtering in RStudio Console](../screenshots/vec_04_filter.png)
+When you write a condition on a vector, R evaluates it for **every element** and returns a logical vector of TRUE/FALSE:
 
 ```r
 scores <- c(85, 90, 78, 92, 88)
 
-# Which scores are above 85?
 scores > 85
 # [1] FALSE  TRUE FALSE  TRUE  TRUE
+```
 
-# Get only those scores
+You can then use that logical vector inside `[ ]` to keep only the TRUE positions:
+
+```r
 scores[scores > 85]
 # [1] 90 92 88
+```
 
-# Scores between 80 and 90
+You can combine conditions with `&` (AND) and `|` (OR):
+
+```r
 scores[scores >= 80 & scores <= 90]
 # [1] 85 90 88
 
-# Students named "Alice" or "Clara"
+scores[scores < 80 | scores > 90]
+# [1] 78 92
+```
+
+For character vectors, use `==` to match exact values:
+
+```r
 students <- c("Alice", "Bob", "Clara", "David", "Eva")
-students[students == "Alice" | students == "Clara"]
-# [1] "Alice" "Clara"
+students[students == "Clara"]
+# [1] "Clara"
 ```
 
 ---
 
-## ➕ Vector Arithmetic
+## Vector Arithmetic — Vectorisation
 
-> **What's happening:** When you do math on a vector, R applies the operation to **every element** automatically. This is called **vectorisation** — it's one of R's superpowers.
-
-![Vector Arithmetic in RStudio Console](../screenshots/vec_05_arithmetic.png)
+In R, when you perform arithmetic on a vector, the operation is applied to **every element automatically**. This is called **vectorisation**, and it's one of the most important ideas in R.
 
 ```r
 scores <- c(85, 90, 78, 92, 88)
 
-# Add 5 bonus marks to everyone
-scores + 5
+scores + 5      # add 5 to every score
 # [1]  90  95  83  97  93
 
-# Percentage out of 100
-scores / 100
+scores / 100    # convert to proportions
 # [1] 0.85 0.90 0.78 0.92 0.88
+```
 
-# Two vectors of same length — element by element
+When you operate on two vectors of the **same length**, R matches them element by element:
+
+```r
 test1 <- c(80, 70, 90)
 test2 <- c(60, 85, 75)
 
 test1 + test2
 # [1] 140 155 165
 
-# Average of two tests
+(test1 + test2) / 2     # average of two tests
+# [1] 70.0 77.5 82.5
+```
+
+If the vectors are different lengths, R "recycles" the shorter one — this can lead to unexpected results, so be careful.
+
+---
+
+## Useful Vector Functions
+
+R comes with a rich set of built-in functions for summarising and working with vectors:
+
+| Function | What it does | Example result |
+|----------|-------------|----------------|
+| `length(x)` | Number of elements | `5` |
+| `sum(x)` | Total of all elements | `433` |
+| `mean(x)` | Average | `86.6` |
+| `median(x)` | Middle value | `88` |
+| `min(x)` | Smallest value | `78` |
+| `max(x)` | Largest value | `92` |
+| `range(x)` | Min and max together | `78 92` |
+| `sd(x)` | Standard deviation | `5.18` |
+| `sort(x)` | Sorted lowest to highest | `78 85 88 90 92` |
+| `rev(x)` | Reversed order | `88 92 78 90 85` |
+| `which.min(x)` | Index of the smallest | `3` (position of 78) |
+| `which.max(x)` | Index of the largest | `4` (position of 92) |
+| `unique(x)` | Remove duplicate values | removes repeats |
+| `table(x)` | Count how many times each value appears | useful for categories |
+
+---
+
+# Part 2 — Hands-On
+
+## Try These in RStudio
+
+![Creating Vectors in RStudio Console](../screenshots/vec_01_create.png)
+
+```r
+# Creating vectors
+scores   <- c(85, 90, 78, 92, 88)
+students <- c("Alice", "Bob", "Clara", "David", "Eva")
+passed   <- c(TRUE, TRUE, FALSE, TRUE, TRUE)
+
+scores
+# [1] 85 90 78 92 88
+
+class(scores)
+# [1] "numeric"
+
+length(scores)
+# [1] 5
+```
+
+![Sequences in RStudio Console](../screenshots/vec_02_sequences.png)
+
+```r
+# Sequences
+1:10
+# [1]  1  2  3  4  5  6  7  8  9 10
+
+seq(0, 50, by = 10)
+# [1]  0 10 20 30 40 50
+
+rep(c("A", "B"), each = 3)
+# [1] "A" "A" "A" "B" "B" "B"
+```
+
+![Vector Indexing in RStudio Console](../screenshots/vec_03_index.png)
+
+```r
+# Indexing
+scores[1]        # [1] 85
+scores[3]        # [1] 78
+scores[2:4]      # [1] 90 78 92
+scores[-2]       # [1] 85 78 92 88   — drops 2nd element
+```
+
+![Vector Filtering in RStudio Console](../screenshots/vec_04_filter.png)
+
+```r
+# Filtering
+scores[scores > 85]
+# [1] 90 92 88
+
+scores[scores >= 80 & scores <= 90]
+# [1] 85 90 88
+
+students[students != "Bob"]
+# [1] "Alice" "Clara" "David" "Eva"
+```
+
+![Vector Arithmetic in RStudio Console](../screenshots/vec_05_arithmetic.png)
+
+```r
+# Vectorised arithmetic
+scores + 5
+# [1]  90  95  83  97  93
+
+test1 <- c(80, 70, 90)
+test2 <- c(60, 85, 75)
 (test1 + test2) / 2
 # [1] 70.0 77.5 82.5
 ```
 
----
-
-## 📐 Useful Vector Functions
-
 ![Vector Functions in RStudio Console](../screenshots/vec_06_functions.png)
 
 ```r
-scores <- c(85, 90, 78, 92, 88)
-
-sum(scores)       # Total: 433
-mean(scores)      # Average: 86.6
-min(scores)       # Lowest: 78
-max(scores)       # Highest: 92
-range(scores)     # Min and Max: 78 92
-median(scores)    # Middle value: 88
-sd(scores)        # Standard deviation: 5.18
-length(scores)    # Number of elements: 5
-sort(scores)      # Sorted: 78 85 88 90 92
-rev(scores)       # Reversed: 88 92 78 90 85
-which.max(scores) # Index of highest: 4
-which.min(scores) # Index of lowest: 3
+# Summary functions
+mean(scores)      # [1] 86.6
+max(scores)       # [1] 92
+min(scores)       # [1] 78
+sort(scores)      # [1] 78 85 88 90 92
+which.max(scores) # [1] 4   — 92 is at position 4
 ```
 
 ---
 
-## ✏️ Try It Yourself
+# Part 3 — Exercises
 
-**Exercise — Vectors**
+---
 
-In RStudio, try this step by step:
+## ### Exercise 1 — Creating and Inspecting a Vector
 
-1. Create a vector `temps` with these daily temperatures (in °C): `32, 35, 30, 28, 33, 36, 29`
-2. Find the average temperature using `mean()`.
-3. Find the highest and lowest using `max()` and `min()`.
-4. Get only the days where temperature was **above 32**.
-5. Add `2` to every temperature (imagine a heatwave) — what does the new vector look like?
-6. Sort the temperatures from lowest to highest.
+> **Create a vector called `temps` with these 7 daily temperatures: `32, 35, 30, 28, 33, 36, 29`. Find its length, mean, max, and min.**
 
-<details>
-<summary>💡 Click to reveal answers</summary>
+&nbsp;
+
+&nbsp;
+
+&nbsp;
 
 ```r
-# 1
 temps <- c(32, 35, 30, 28, 33, 36, 29)
 
-# 2
-mean(temps)
-# [1] 31.86
-
-# 3
-max(temps)   # [1] 36
-min(temps)   # [1] 28
-
-# 4
-temps[temps > 32]
-# [1] 35 33 36
-
-# 5
-temps + 2
-# [1] 34 37 32 30 35 38 31
-
-# 6
-sort(temps)
-# [1] 28 29 30 32 33 35 36
+length(temps)   # [1] 7
+mean(temps)     # [1] 31.86
+max(temps)      # [1] 36
+min(temps)      # [1] 28
 ```
 
-</details>
+---
+
+## ### Exercise 2 — Indexing
+
+> **Using the `temps` vector from Exercise 1, extract:**
+> - The temperature on day 3
+> - Temperatures from day 2 to day 5
+> - All days except day 4
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+```r
+temps[3]       # [1] 30
+
+temps[2:5]     # [1] 35 30 28 33
+
+temps[-4]      # [1] 32 35 30 33 36 29
+```
+
+---
+
+## ### Exercise 3 — Filtering
+
+> **From the `temps` vector, extract only the days where temperature was strictly above 32. How many such days were there?**
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+```r
+hot_days <- temps[temps > 32]
+hot_days
+# [1] 35 33 36
+
+length(hot_days)
+# [1] 3
+```
+
+---
+
+## ### Exercise 4 — Vectorised Operations
+
+> **A student scored the following marks out of 50 in 5 subjects: `38, 45, 29, 42, 36`. Convert these to percentages (out of 100) and add 5 bonus marks to each. What are the final scores?**
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+```r
+marks <- c(38, 45, 29, 42, 36)
+
+percentage <- (marks / 50) * 100
+# [1] 76 90 58 84 72
+
+final <- percentage + 5
+final
+# [1] 81 95 63 89 77
+```
 
 ---
 
